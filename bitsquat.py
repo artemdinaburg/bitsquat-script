@@ -5,20 +5,13 @@ import socket
 
 def bitflip(num, pos):
     shiftval = 1 << pos
-
-    if num & shiftval > 0:
-        return num & (~shiftval)
-    else:
-        return num | shiftval
+    return num ^ shiftval
 
 def is_valid(charnum):
-    if  (charnum >= ord('0') and charnum <= ord('9')) or\
-        (charnum >= ord('a') and charnum <= ord('z')) or\
-        (charnum >= ord('A') and charnum <= ord('Z')) or\
-        charnum == ord('-'):
-        return True
-    else:
-        return False
+    return ((charnum >= ord('0') and charnum <= ord('9')) or
+            (charnum >= ord('a') and charnum <= ord('z')) or
+            (charnum >= ord('A') and charnum <= ord('Z')) or
+             charnum == ord('-'))
 
 def usage():
     print "Usage:"
@@ -42,9 +35,7 @@ if __name__ == "__main__":
         for bit in range(0,8):
             newval = bitflip(ord(val), bit)
             if is_valid(newval) and val.lower() != chr(newval).lower():
-                newname = name[:i] + chr(newval)
-                if i + 1 < len(name):
-                    newname += name[i+1:]
+                newname = name[:i] + chr(newval) + name[i+1:]
                 try:
                     ipaddr = socket.gethostbyname(newname + suffix)
                     sys.stdout.write('%s%s: is taken (%s)\n' % (newname, suffix, ipaddr,))
